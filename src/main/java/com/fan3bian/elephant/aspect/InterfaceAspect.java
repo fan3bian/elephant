@@ -4,17 +4,19 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Aspect
+@Service
 public class InterfaceAspect {
-    private static final Logger log = LoggerFactory.getLogger(HttpRequestAspect.class);
+    private static final Logger log = LoggerFactory.getLogger(InterfaceAspect.class);
 
-    public static long startTime;
-    public static long endTime;
+    static long startTime;
+    static long endTime;
 
     /*@PointCut注解表示表示横切点，哪些方法需要被横切*/
     /*切点表达式*/
-    @Pointcut("execution(public * com.fan3bian.elephant.service.*(..))")
+    @Pointcut("execution(public * com.fan3bian.elephant.service.*.*(..))")
     /*切点签名*/
     public void print() {
 
