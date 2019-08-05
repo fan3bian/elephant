@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
@@ -39,9 +40,10 @@ public class UserApplicationTest extends MvcApplicationTest{
     @Test
     public void queryUsers() throws Exception{
         this.base = new URL("http://localhost:" + port + "/elephant/user/queryUsers");
-//        ResponseEntity<List<User>> response2 = template.exchange(base.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>() {
-//        });
-        //todo 不知道为啥报错
+        ParameterizedTypeReference<List<User>> typeRef = new ParameterizedTypeReference<List<User>>() {
+        };
+//        ResponseEntity<List<User>> response2 = template.exchange(base.toString(), HttpMethod.GET, null, typeRef);
+//        //todo 不知道为啥报错
 //        log.error(response2.toString());
 
     }
