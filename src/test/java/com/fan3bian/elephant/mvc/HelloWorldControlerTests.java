@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.net.URI;
 
 @RunWith(SpringRunner.class)
-  @SpringBootTest
+@SpringBootTest
 public class HelloWorldControlerTests {
     private MockMvc mvc;
     @Resource
