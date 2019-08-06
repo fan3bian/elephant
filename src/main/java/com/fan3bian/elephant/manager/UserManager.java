@@ -9,4 +9,5 @@ public interface UserManager {
     int addUser(User user);
 
     List<User> queryUsersByName(String userName);
+
 }

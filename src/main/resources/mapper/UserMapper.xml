@@ -5,5 +5,7 @@
     <insert id="insert">
       INSERT INTO `t_user`(`username`,`password`) VALUES (#{username},#{password})
     </insert>
-
+    <select id="countByUsername" resultType="java.lang.Integer">
+      SELECT count(1) FROM t_user WHERE username = #{username}
+  </select>
 </mapper>
