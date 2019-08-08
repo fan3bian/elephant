@@ -17,4 +17,6 @@ public interface UserDao extends BaseMapper<User> {
 
     int countByUsername(String username);
 
+    @Select("SELECT * FROM t_user WHERE id = #{id}")
+    User getUser(Long id);
 }

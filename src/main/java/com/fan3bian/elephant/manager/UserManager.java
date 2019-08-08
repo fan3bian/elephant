@@ -10,4 +10,5 @@ public interface UserManager {
 
     List<User> queryUsersByName(String userName);
 
+    User getUser(Long id);
 }
