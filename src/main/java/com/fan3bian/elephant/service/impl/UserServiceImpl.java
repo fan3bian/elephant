@@ -1,5 +1,6 @@
 package com.fan3bian.elephant.service.impl;
 
+import com.fan3bian.elephant.annotation.RepeatSubmit;
 import com.fan3bian.elephant.domain.entity.User;
 import com.fan3bian.elephant.service.UserService;
 import com.fan3bian.elephant.utils.JsonUtil;
@@ -17,14 +18,15 @@ public class UserServiceImpl implements UserService {
     private JdbcTemplate jdbcTemplate;
 
     @Override
+    @RepeatSubmit(bizNo ="#user.username")
     public int addUser(User user) {
         String sql = "insert into t_user(username, password) values(?, ?)";
         return jdbcTemplate.update(sql, user.getUsername(), user.getPassword());
     }
 
     @Override
-    public int delUser(User user) {
-        return 0;
+    @RepeatSubmit(bizNo ="#user.username")
+    public void delUser(User user) {
     }
 
     @Override

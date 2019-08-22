@@ -13,10 +13,13 @@ public class TestRedisTemplate extends ElephantApplicationTests {
 
     @Test
     public void test() {
-        stringRedisTemplate.opsForValue().set("k1", "v1");
+//        stringRedisTemplate.opsForValue().set("k1", "v1");
 
-        String v1 = stringRedisTemplate.opsForValue().get("k1");
+//        String v1 = stringRedisTemplate.opsForValue().get("k1");
 
-        System.out.println(v1);
+        Boolean bool = stringRedisTemplate.opsForValue().setIfAbsent("", "");
+
+
+        System.out.println(bool);
     }
 }
