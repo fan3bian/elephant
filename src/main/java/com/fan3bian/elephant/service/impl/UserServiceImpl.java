@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @RepeatSubmit(bizNo ="#user.username")
+    @RepeatSubmit("asdf")
     public void delUser(User user) {
     }
 

@@ -1,20 +1,17 @@
 package com.fan3bian.elephant.aspect;
 
 import com.fan3bian.elephant.annotation.RepeatSubmit;
-import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.expression.ExpressionException;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 @Aspect
 @Component
@@ -25,14 +22,7 @@ public class RepeatSubmitAspect {
 
     @Around("@annotation(annotation)")
     public Object doAround(ProceedingJoinPoint pjp, RepeatSubmit annotation) throws Throwable {
-
-//        long start = System.currentTimeMillis();
-
-        String bizNo = annotation.bizNo();
-
-        String value = annotation.value();
-        long timeout = annotation.timeout();
-        TimeUnit unit = annotation.unit();
+        String redisKey = "";
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         String[] parameterNames = signature.getParameterNames();
         Object[] args = pjp.getArgs();
@@ -40,16 +30,24 @@ public class RepeatSubmitAspect {
         for (int i = 0; i < parameterNames.length; i++) {
             context.setVariable(parameterNames[i], args[i]);
         }
-        String redisKey = null;
-        Object result = null;
-        redisKey = parser.parseExpression(bizNo).getValue(context, String.class);
-        log.info("redisKey="+redisKey);
+        redisKey = parser.parseExpression(annotation.bizNo()).getValue(context, String.class);
+        String value = "";
+        if (StringUtils.isBlank(annotation.prefix())) {
+            redisKey += annotation.prefix() + annotation.connector();
+        }
+        redisKey += annotation.bizNo();
+        if (StringUtils.isBlank(annotation.subfix())) {
+            redisKey += annotation.connector() + annotation.subfix();
+        }
+        log.error("防并发分布式锁：[" + redisKey + "]");
+        if (StringUtils.isBlank(annotation.value())) {
+            value = String.valueOf(System.currentTimeMillis());
+        }
         try {
 
-            result = pjp.proceed();
+            return pjp.proceed();
         } finally {
 
         }
-        return result;
     }
 }

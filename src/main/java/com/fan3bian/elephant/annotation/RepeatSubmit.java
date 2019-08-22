@@ -9,9 +9,11 @@ import java.util.concurrent.TimeUnit;
 public @interface RepeatSubmit {
     String prefix() default "";
 
+    String subfix() default "";
+
     String connector() default "_";
 
-    String bizNo();
+    String bizNo() default "";
 
     String value() default "";
 
