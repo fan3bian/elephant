@@ -14,5 +14,5 @@ public class Item {
     @NotBlank
     private String itemCode;
     private String itemName;
-    private String qty;
+    private Integer qty;
 }
