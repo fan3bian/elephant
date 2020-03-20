@@ -19,4 +19,5 @@ public interface UserDao extends BaseMapper<User> {
 
     @Select("SELECT * FROM t_user WHERE id = #{id}")
     User getUser(Long id);
+
 }

@@ -3,13 +3,16 @@ package com.fan3bian.elephant.controller;
 import com.fan3bian.elephant.domain.Item;
 import com.fan3bian.elephant.domain.Order;
 import com.fan3bian.elephant.domain.Result;
+import com.fan3bian.elephant.domain.condition.ReportMasterCondition;
 import com.fan3bian.elephant.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,4 +45,9 @@ public class OrderController {
 
 //
 //    void delOrder(Order order);
+
+    @GetMapping(value = "/report")
+    public void query( @Valid ReportMasterCondition cond) {
+        System.out.println(JsonUtil.toJson(cond));
+    }
 }

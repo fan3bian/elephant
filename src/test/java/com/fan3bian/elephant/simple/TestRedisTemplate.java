@@ -13,13 +13,17 @@ public class TestRedisTemplate extends ElephantApplicationTests {
 
     @Test
     public void test() {
-//        stringRedisTemplate.opsForValue().set("k1", "v1");
+        for (int i = 0; i < 10000; i++) {
+            stringRedisTemplate.opsForValue().set("CSL"+i, "v1");
+            stringRedisTemplate.opsForValue().set("ASL"+i, "v1");
+            stringRedisTemplate.opsForValue().set("DSL"+i, "v1");
+        }
 
 //        String v1 = stringRedisTemplate.opsForValue().get("k1");
 
-        Boolean bool = stringRedisTemplate.opsForValue().setIfAbsent("", "");
+//        Boolean bool = stringRedisTemplate.opsForValue().setIfAbsent("", "");
 
 
-        System.out.println(bool);
+//        System.out.println(bool);
     }
 }

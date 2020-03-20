@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fan3bian.elephant.dao.WarehouseDao">
+
+
+    <select id="getWarehouseStock" resultType="java.util.HashMap">
+        SELECT
+          w.type,
+          IFNULL(SUM(ws.real_num), 0) total
+        FROM
+          warehouse w
+          LEFT JOIN warehouse_stock ws
+            ON w.id = ws.warehouse_id
+        WHERE w.`status` = 2
+          AND is_delete = 0
+        GROUP BY w.`type`
+    </select>
+</mapper>

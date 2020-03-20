@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fan3bian.elephant.dao.ReportMasterDao">
+
+    <select id="countStockGroupByWarehouseType" resultType="java.util.Map">
+        SELECT
+        w.type,
+        IFNULL(SUM(ws.real_num), 0) total
+        FROM
+        warehouse w
+        LEFT JOIN warehouse_stock ws
+        ON w.id = ws.warehouse_id AND ws.is_delete = 0
+        WHERE w.`status` = 1 AND w.is_delete = 0
+        <if test="tenantId !=null and tenantId != ''">
+            and w.tenant_id = #{tenantId}
+        </if>
+        GROUP BY w.`type`
+    </select>
+
+    <select id="countStockGroupByProvince" resultType="java.util.Map">
+        SELECT
+          w.province_name provinceName,
+          IFNULL(SUM(ws.real_num), 0) total
+        FROM
+          warehouse w
+        LEFT JOIN warehouse_stock ws ON w.id = ws.warehouse_id
+        WHERE w.`status` = 2 AND ws.is_delete = 0
+        AND w.is_delete = 0
+        GROUP BY w.`province_name` ORDER BY total DESC
+    </select>
+
+    <select id="countWarehouse" resultType="java.lang.Integer">
+        SELECT
+          count(1)
+        FROM
+          warehouse w
+        WHERE w.`status` = 2 AND w.is_delete = 0
+    </select>
+
+    <select id="countWarehouseGroupByProvince" resultType="java.util.Map"
+            parameterType="com.fan3bian.elephant.domain.condition.ReportMasterCondition">
+        SELECT
+          COUNT(1) total, province_name provinceName, longitude, latitude
+        FROM
+          warehouse
+        WHERE status = 2 and is_delete = 0
+        GROUP BY province_name ORDER BY total DESC
+    </select>
+
+    <select id="countManufacturerGroupByProvince" resultType="java.util.Map">
+        SELECT
+        COUNT(1) total, province, longitude, latitude
+        FROM
+        manufacturer
+        WHERE type = 1 and is_delete = 0
+        GROUP BY province ORDER BY total DESC
+    </select>
+
+    <select id="countWarehouseDetailByCond" resultType="java.util.Map"
+            >
+        SELECT
+        w.id warehouseId, w.province_name provinceName, w.longitude, w.latitude, w.address, w.type, IFNULL(SUM(ws.real_num),0) total
+        FROM
+        warehouse w
+        LEFT JOIN warehouse_stock ws
+        ON w.id = ws.warehouse_id AND ws.is_delete = 0
+        WHERE w.`status` = 1
+        AND w.is_delete = 0
+        <if test="provinceId !=null and provinceId != ''">
+            and province_id = #{provinceId}
+        </if>
+        GROUP by w.id
+        ORDER BY total DESC
+    </select>
+
+    <select id="getGoodsTagByWarehouse" resultType="java.util.Map"
+            parameterType="com.fan3bian.elephant.domain.condition.ReportMasterCondition">
+        SELECT
+        ws.warehouse_id warehouseId,IFNULL(GROUP_CONCAT(DISTINCT(gb.tag)),'') tags
+        FROM
+        warehouse_stock ws
+        LEFT JOIN goods_base gb
+        ON gb.id = ws.goods_id AND gb.is_delete = 0
+        WHERE ws.is_delete = 0
+        <if test="warehouseIdList != null and warehouseIdList.size() > 0">
+            and ws.warehouse_id in
+            <foreach item="item" collection="warehouseIdList" index="index" open="(" separator="," close=")">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        GROUP BY ws.warehouse_id
+    </select>
+
+    <select id="countManufacturerDetailByCond" resultType="java.util.Map"
+            parameterType="com.fan3bian.elephant.domain.condition.ReportMasterCondition">
+        SELECT
+        m.manufacturer_no manufacturerNo, m.province_name proviceName, m.longitude, m.latitude, m.address, m.type, IFNULL(SUM(mc.yield/mc.product_period),0) total
+        FROM
+          manufacturer m
+        LEFT JOIN manufacturer_capacity mc
+        ON m.manufacturer_no = mc.manufacturer_no AND mc.is_delete = 0
+        WHERE m.`status` = 1 and m.type = 1
+        <if test="provinceId !=null and provinceId != ''">
+            and province_id = #{provinceId}
+        </if>
+        AND m.is_delete = 0
+        GROUP BY m.`manufacturer_no`
+    </select>
+
+    <select id="getGoodsTagByManufacturer" resultType="java.util.Map"
+            parameterType="com.fan3bian.elephant.domain.condition.ReportMasterCondition">
+        SELECT
+        mc.manufacturer_no manufacturerNo, IFNULL(GROUP_CONCAT(DISTINCT(gb.tag)),'') tags
+        FROM
+          manufacturer_capacity mc
+        LEFT JOIN goods_base gb
+        ON mc.goods_no = gb.goods_no AND gb.is_delete = 0
+        WHERE mc.is_delete = 0
+        <if test="manufacturerNoList != null and manufacturerNoList.size() > 0">
+            and mc.manufacturer_no in
+            <foreach item="item" collection="manufacturerNoList" index="index" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY mc.`manufacturer_no`
+    </select>
+</mapper>
