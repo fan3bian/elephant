@@ -9,7 +9,7 @@ public interface UserService {
 
     void delUser(User user);
 
-    int getUser(User user);
+    User getUser(User user);
 
     List<User> queryUsers();
 }
