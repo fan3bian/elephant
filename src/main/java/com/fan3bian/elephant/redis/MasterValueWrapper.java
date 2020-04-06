@@ -1,6 +1,7 @@
 package com.fan3bian.elephant.redis;
 
 import com.fan3bian.elephant.utils.JsonUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.type.JavaType;
 import org.springframework.cache.Cache.ValueWrapper;
@@ -33,16 +34,20 @@ public class MasterValueWrapper implements ValueWrapper {
             if (value == null) {
                 return;
             }
-            String jsonStr = (String) value;
-            Class<?> clazz1 = Class.forName((String) clazz);
-            if (jsonStr.startsWith("[")) {
-//                this.value = JsonUtil.fromJson(jsonStr, new TypeReference<List>(){});
-                JavaType javaType = JsonUtil.mapper().getTypeFactory().constructParametricType(List.class,clazz1);
-                this.value = JsonUtil.mapper().readValue(jsonStr,javaType);
-            } else {
-                this.value = JsonUtil.fromJson(jsonStr, clazz1);
-            }
+//            ObjectMapper objectMapper = new ObjectMapper();
+            Object o = new ObjectMapper().readValue((String) value, Object.class);
+            System.out.println(o.getClass());
+            this.value = o;
 
+//            String jsonStr = (String) value;
+//            Class<?> clazz1 = Class.forName((String) clazz);
+//            if (jsonStr.startsWith("[")) {
+////                this.value = JsonUtil.fromJson(jsonStr, new TypeReference<List>(){});
+//                JavaType javaType = JsonUtil.mapper().getTypeFactory().constructParametricType(List.class,clazz1);
+//                this.value = JsonUtil.mapper().readValue(jsonStr,javaType);
+//            } else {
+//                this.value = JsonUtil.fromJson(jsonStr, clazz1);
+//            }
 
         } catch (Exception e) {
             logger.error("缓存类型转换异常！", e);

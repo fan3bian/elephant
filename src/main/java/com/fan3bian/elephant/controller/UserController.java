@@ -24,6 +24,6 @@ public class UserController {
 
     @GetMapping("/querUsers")
     public List<User> queryUsers() {
-        return userService.queryUsers();
+        return userService.queryUsers(null);
     }
 }

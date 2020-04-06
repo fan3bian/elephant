@@ -19,7 +19,7 @@ public class HelloServiceTest extends ElephantApplicationTests {
     public void testHello() {
         Result<String> result = helloService.echo("quao");
         System.out.println(result.getMsg());
-        List<User> users = userService.queryUsers();
+        List<User> users = userService.queryUsers(null);
         System.out.println(users);
     }
 }

@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
 
     }
     @Override
-    @Cacheable("user")
-    public List<User> queryUsers(){
+    @Cacheable(value = "users",key ="#user.id" )
+    public List<User> queryUsers(User user){
         String sql = "select * from t_user";
         log.info("没有查缓存哦");
         return jdbcTemplate.query(sql, new Object[]{}, new BeanPropertyRowMapper<>(User.class));

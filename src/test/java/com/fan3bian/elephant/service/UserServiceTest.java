@@ -5,6 +5,7 @@ import com.fan3bian.elephant.domain.Result;
 import com.fan3bian.elephant.domain.entity.User;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -33,19 +34,21 @@ public class UserServiceTest extends ElephantApplicationTests {
         User user = new User();
         user.setUsername("Picasso");
         user.setPassword("quao");
-         userService.delUser(user);
+        userService.delUser(user);
 //        Assert.assertEquals(1,);
 //        Result<String> result = helloService.echo("quao");
 //        System.out.println(result.getMsg());
 //        List<User> users = userService.queryUsers();
 //        System.out.println(users);
     }
+
     @Test
-    public void queryUser() {
+    public void queryUsers() {
         User user = new User();
         user.setUsername("Picasso");
         user.setPassword("quao");
-        List<User> users = userService.queryUsers();
+        user.setId(4L);
+        List<User> users = userService.queryUsers(user);
         System.out.println(users);
 //        Assert.assertEquals(1,);
 //        Result<String> result = helloService.echo("quao");
@@ -53,10 +56,11 @@ public class UserServiceTest extends ElephantApplicationTests {
 //        List<User> users = userService.queryUsers();
 //        System.out.println(users);
     }
+
     @Test
     public void getUser() {
         User user = new User();
-        user.setId(2L);
+        user.setId(1L);
         user.setUsername("Picasso");
         user.setPassword("quao");
         User user1 = userService.getUser(user);

@@ -11,5 +11,5 @@ public interface UserService {
 
     User getUser(User user);
 
-    List<User> queryUsers();
+    List<User> queryUsers(User user);
 }

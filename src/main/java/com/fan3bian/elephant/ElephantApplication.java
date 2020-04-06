@@ -1,24 +1,20 @@
 package com.fan3bian.elephant;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
-
-import java.util.Arrays;
 
 @SpringBootApplication
 @EnableCaching
-//@ImportResource(locations = {"classpath:/spring-jimdb.xml"})
-
+@ComponentScan(basePackages = {"com.jd.fpl.cache.client", "com.fan3bian.elephant"})
+@ImportResource(locations = {"classpath:/spring-jimdb.xml"})
 public class ElephantApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ElephantApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ElephantApplication.class, args);
+    }
 
 //	@Bean
 //	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {

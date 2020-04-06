@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
     	http://www.springframework.org/schema/cache
     	http://www.springframework.org/schema/cache/spring-cache.xsd"
        default-lazy-init="false">
-    <bean id="jimClient" class="com.jd.jim.cli.ReloadableJimClientFactoryBean">
-        <property name="jimUrl" value="jim://2580950400013182903/80000015" />
-    </bean>
+
+    <!--<bean id="jimClient" class="com.jd.jim.cli.ReloadableJimClientFactoryBean">-->
+        <!--<property name="jimUrl" value="jim://2580950400013182903/80000015"/>-->
+    <!--</bean>-->
 
     <!-- 添加缓存注解支持  -->
     <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>
 
-    <bean id="cacheManager" class="com.fan3bian.elephant.redis.JimCacheManager">
+    <bean id="cacheManager" class="com.fan3bian.elephant.redis.RedisCacheManager">
         <property name="transactionAware" value="true"/>
         <property name="caches">
             <list>
                 <bean class="com.fan3bian.elephant.redis.RedisCache">
                     <constructor-arg value="user"/>
-                    <constructor-arg ref="jimClient"/>
-                    <constructor-arg value="com.fan3bian.elephant.domain.entity.User"/>
+                    <!--<constructor-arg ref="jimClient"/>-->
+                    <!--<constructor-arg value="com.fan3bian.elephant.domain.entity.User"/>-->
                     <!--  <constructor-arg valSellerller"/> -->
                 </bean>
             </list>

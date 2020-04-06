@@ -129,11 +129,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.jd.jim.cli</groupId>
-            <artifactId>jim-cli-api</artifactId>
-            <version>1.4.7-SNAPSHOT</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.jd.jim.cli</groupId>-->
+            <!--<artifactId>jim-cli-api</artifactId>-->
+            <!--<version>1.4.7-SNAPSHOT</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>

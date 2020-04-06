@@ -1,12 +1,15 @@
 package com.fan3bian.elephant.redis;
 
 import com.fan3bian.elephant.utils.JsonUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jd.fpl.cache.client.CacheClient;
 import com.jd.jim.cli.Cluster;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.cache.Cache;
 import org.springframework.core.task.TaskExecutor;
 
+import javax.annotation.Resource;
 import java.util.concurrent.Callable;
 
 import static java.lang.String.format;
@@ -27,22 +30,25 @@ public class RedisCache<T> implements Cache {
      * key下的field
      */
     private String key;
-    private String clazz;
+//    private String clazz;
     /**
      * 除id之外的其他缓存field，清空缓存时用来关联清空
      */
     private String[][] evictRelFields;
-    /**
-     * 注入的redis客户端
-     */
-    private final Cluster client;
+//    /**
+//     * 注入的redis客户端
+//     */
+//    private final Cluster cacheClient;
+
+    @Resource
+    private CacheClient cacheClient;
 
     private TaskExecutor taskExecutor;
 
-    public RedisCache(String key, Cluster client, String clazz) {
+    public RedisCache(String key) {
         this.key = key;
-        this.client = client;
-        this.clazz = clazz;
+//        this.cacheClient = cacheClient;
+//        this.clazz = clazz;
     }
 
     @Override
@@ -51,26 +57,24 @@ public class RedisCache<T> implements Cache {
     }
 
     @Override
-    public Cluster getNativeCache() {
-        return client;
+    public Object getNativeCache() {
+        return cacheClient;
     }
+
 
     @Override
     public ValueWrapper get(Object field) {
         MasterValueWrapper result = null;
         try {
             final String fieldStr = field.toString();
-            Object t = new RedisExecutor<Object>(client) {
-                @Override
-                Object execute() {
-                    logger.info("redis执行器 ValueWrapper get(Object key)：keyStr:---->" + key + "; field--->" + fieldStr);
-                    return client.hGet(key, fieldStr);
-                }
-            }.getResult();
 
-            if (t != null) {
-                result = new MasterValueWrapper(t, clazz);
+            String s = cacheClient.hGet(key, fieldStr);
+            if (s == null) {
+                return null;
             }
+            System.out.println("缓存里的返回值"+s);
+            result = new MasterValueWrapper(s, null);
+//            }
         } catch (Exception e) {
             logger.error("读取缓存异常", e);
         }
@@ -93,16 +97,9 @@ public class RedisCache<T> implements Cache {
         try {
             final String fieldStr = field.toString();
             final String valStr = JsonUtil.toJson(value);
-            new RedisExecutor<Object>(client) {
-                @Override
-                Object execute() {
-                    if (!"".equals(valStr)) {
-                        logger.info("redis执行器 void put(Object key, Object value)：keyStr:---->" + key + "field--->" + fieldStr + "valStr--->" + valStr);
-                        return client.hSet(key, fieldStr, valStr);
-                    }
-                    return true;
-                }
-            }.getResult();
+
+            cacheClient.hSet(key, fieldStr, valStr);
+
         } catch (Exception e) {
             logger.error("设置缓存异常", e);
         }
@@ -120,21 +117,7 @@ public class RedisCache<T> implements Cache {
         }
         final StringBuilder sb = new StringBuilder(500);
         try {
-            String fieldOri = field.toString().replaceAll("\\[", "").replaceAll("\\]", "");
-            final String fieldStr = fieldOri;
-            new RedisExecutor<Object>(client) {
-                @Override
-                Object execute() {
-                    String[] arrKey = fieldStr.split("[,]");
-                    for (int idx = 0; idx < arrKey.length; idx++) {
-                        String fieldNow = arrKey[idx].trim();
-                        evictAllRelative(fieldNow, sb);
-                        client.hDel(key, fieldNow);
-                        logger.info("redis执行器 void evict(Object key)：keyStr:---->" + key + "；field--->" + fieldNow);
-                    }
-                    return arrKey.length;
-                }
-            }.getResult();
+
         } catch (Exception e) {
             logger.error("com.jd.clps.master.redis.exception#清除缓存异常", e);
             sb.append(field.toString());
@@ -144,7 +127,6 @@ public class RedisCache<T> implements Cache {
             try {
                 String reason = format("清除缓存异常#hDel(%s,%s)", key, sb.toString());
                 logger.error("com.jd.clps.master.redis.exception#" + reason);
-                sendMail("清除缓存异常，请手动清除", reason, "chenhaie@jd.com");
             } catch (Exception es) {
                 logger.error("redis报警异常", es);
             }
@@ -173,10 +155,10 @@ public class RedisCache<T> implements Cache {
                     String delField = RedisFieldGenerator.generateField(delValue, evictRelFields[i]);
                     if (StringUtils.isNotBlank(delField) && delField.startsWith("delAsKey") && delField.contains(RedisFieldGenerator.REDIS_FIELD_SPLIT_CHAR)) {
                         String[] arrDelField = delField.substring(0, delField.length() - 1).split(RedisFieldGenerator.REDIS_FIELD_SPLIT_CHAR, 2);
-                        client.del(arrDelField[1]);
+                        cacheClient.del(arrDelField[1]);
                         logger.warn(format("RedisCache->evictAllRelative->del(%s)", arrDelField[1]));
                     } else if (StringUtils.isNotBlank(delField)) {
-                        client.hDel(key, delField);
+                        cacheClient.hDel(key, delField);
                         logger.info("redis执行器 void evict(Object key)：keyStr:---->" + key + "；field--->" + delField);
                     }
                 }
@@ -191,31 +173,6 @@ public class RedisCache<T> implements Cache {
         }
     }
 
-    private void sendMail(String subject, String content, String receive) {
-        if (taskExecutor != null) {
-            taskExecutor.execute(new sendMailThread(subject, content, receive));
-        }
-    }
-
-    class sendMailThread extends Thread {
-        private String subject;
-        private String content;
-        private String receive;
-
-        sendMailThread(String subject, String content, String receive) {
-            this.subject = subject;
-            this.content = content;
-            this.receive = receive;
-        }
-
-        @Override
-        public void run() {
-            try {
-            } catch (Exception e) {
-                logger.error("发送邮件失败", e);
-            }
-        }
-    }
 
     @Override
     public void clear() {
