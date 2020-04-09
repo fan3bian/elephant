@@ -2,6 +2,7 @@ package com.fan3bian.elephant.simple;
 
 import com.fan3bian.elephant.ElephantApplicationTests;
 import com.fan3bian.elephant.domain.entity.User;
+import com.fan3bian.elephant.utils.JsonUtil;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,8 +82,6 @@ public class TestJim extends ElephantApplicationTests {
         String s = new ObjectMapper().writeValueAsString(users);
         byte[] value = new ObjectMapper().writeValueAsBytes(users);
         redisTemplate.opsForValue().set(2, value);
-//        System.out.println();
-
 
     }
 
@@ -112,6 +111,8 @@ public class TestJim extends ElephantApplicationTests {
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
 
         byte[] value = objectMapper.writeValueAsBytes(users);
+        String s = objectMapper.writeValueAsString(users);
+        System.out.println(s);
         String str2 = new String(value);
         System.out.println(str2);
 //        objectMapper.registerModule(new SimpleModule().addSerializer(new NullValueSerializer(null)));
@@ -123,6 +124,10 @@ public class TestJim extends ElephantApplicationTests {
 //
 //        jedis.set(key,value);
 //        jedis.close(); //使用完关闭连接
+
+    }
+    @Test
+    public void testCache(){
 
     }
 }

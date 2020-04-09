@@ -28,12 +28,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @RepeatSubmit("asdf")
     public void delUser(User user) {
     }
 
     @Override
-    @Cacheable(value = "user",key ="#user.id")
+    @Cacheable(value = "s_user",key ="#user.id")
     public User getUser(User user) {
         System.out.println("没有查缓存哦");
         String sql = "select * from t_user where id = ?";
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     }
     @Override
-    @Cacheable(value = "users",key ="#user.id" )
+    @Cacheable(value = "s_users",key ="#user.id" )
     public List<User> queryUsers(User user){
         String sql = "select * from t_user";
         log.info("没有查缓存哦");

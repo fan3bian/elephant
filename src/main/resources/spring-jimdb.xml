@@ -13,19 +13,19 @@
     <!--</bean>-->
 
     <!-- 添加缓存注解支持  -->
-    <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>
+    <!--<cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>-->
 
-    <bean id="cacheManager" class="com.fan3bian.elephant.redis.RedisCacheManager">
-        <property name="transactionAware" value="true"/>
-        <property name="caches">
-            <list>
-                <bean class="com.fan3bian.elephant.redis.RedisCache">
-                    <constructor-arg value="user"/>
-                    <!--<constructor-arg ref="jimClient"/>-->
-                    <!--<constructor-arg value="com.fan3bian.elephant.domain.entity.User"/>-->
-                    <!--  <constructor-arg valSellerller"/> -->
-                </bean>
-            </list>
-        </property>
-    </bean>
+    <!--<bean id="cacheManager" class="com.fan3bian.elephant.redis.RedisCacheManager">-->
+        <!--<property name="transactionAware" value="true"/>-->
+        <!--<property name="caches">-->
+            <!--<list>-->
+                <!--<bean class="com.fan3bian.elephant.redis.RedisCache">-->
+                    <!--&lt;!&ndash;<constructor-arg value="user"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<constructor-arg ref="jimClient"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<constructor-arg value="com.fan3bian.elephant.domain.entity.User"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;  <constructor-arg valSellerller"/> &ndash;&gt;-->
+                <!--</bean>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
 </beans>

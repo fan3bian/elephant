@@ -27,7 +27,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    @Cacheable(value = "user", key = "#id")
+//    @Cacheable(value = "user", key = "#id",cacheResolver = "")
     public User getUser(Long id) {
         return userDao.getUser(id);
     }
