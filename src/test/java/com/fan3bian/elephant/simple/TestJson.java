@@ -37,7 +37,7 @@ public class TestJson {
 //        for (Buckets bucket : buckets) {
 //            List<Buckets> innerbuckets = bucket.getSp_name().getBuckets();
 //            for (Buckets innerbucket : innerbuckets) {
-//                int num = (int)innerbucket.getTop().getHits().getTotal();
+//                int num = (int)innerbucket.getTop().getHits().getTaxInAmount();
 //                _source source = innerbucket.getTop().getHits().getHits().get(0).get_source();
 //                System.out.println(source.getDept_name()+"  "+source.getDept_no() +"    " +source.getIsv_source()+"     "+source.getSp_name()+"  "+num);
 //            }

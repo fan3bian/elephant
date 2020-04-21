@@ -8,8 +8,6 @@ import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @EnableCaching
-@ComponentScan(basePackages = {"com.jd.fpl.cache.client", "com.fan3bian.elephant"})
-//@ImportResource(locations = {"classpath:/spring-jimdb.xml"})
 public class ElephantApplication {
 
     public static void main(String[] args) {
