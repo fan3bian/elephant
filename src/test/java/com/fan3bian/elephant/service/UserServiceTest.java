@@ -41,30 +41,11 @@ public class UserServiceTest extends ElephantApplicationTests {
 //        List<User> users = userService.queryUsers();
 //        System.out.println(users);
     }
-
     @Test
-    public void queryUsers() {
-        User user = new User();
-        user.setUsername("Picasso");
-        user.setPassword("quao");
-        user.setId(4L);
-        List<User> users = userService.queryUsers(user);
-        System.out.println(users);
-//        Assert.assertEquals(1,);
-//        Result<String> result = helloService.echo("quao");
-//        System.out.println(result.getMsg());
-//        List<User> users = userService.queryUsers();
-//        System.out.println(users);
-    }
+    public void queryUser() {
 
-    @Test
-    public void getUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("Picasso");
-        user.setPassword("quao");
-        User user1 = userService.getUser(user);
-        System.out.println(user1);
+        List<User> users = userService.queryUsers(new User());
+        System.out.println(users.getClass());
 //        Assert.assertEquals(1,);
 //        Result<String> result = helloService.echo("quao");
 //        System.out.println(result.getMsg());
