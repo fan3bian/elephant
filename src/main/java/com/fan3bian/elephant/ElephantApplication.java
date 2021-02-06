@@ -7,9 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@EnableCaching
 public class ElephantApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(ElephantApplication.class, args);
     }
